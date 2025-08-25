@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Generation Test</title>
+    <link rel="stylesheet" href="styles/inline-fixes.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .comment-output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .word-count {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Comment Generator Test</h1>
+        
+        <div class="test-section">
+            <h3>Test Student Data</h3>
+            <p><strong>Name:</strong> Emma Johnson</p>
+            <p><strong>Gender:</strong> Female (she/her)</p>
+            <p><strong>Overall Rating:</strong> 8/10</p>
+            <p><strong>Strengths:</strong> reading, creative thinking, problem solving</p>
+            <p><strong>Areas for Growth:</strong> mathematics, following instructions</p>
+            <p><strong>Selected Subjects:</strong> English, Mathematics, Science</p>
+            <p><strong>Selected Topics:</strong> matching letters to pictures, counting from 1 to 10, exploring the five senses</p>
+            <p><strong>Target:</strong> Minimum 80 words per comment</p>
+        </div>
+
+        <div class="test-section">
+            <button onclick="testCommentGeneration()">Generate Test Comments</button>
+            <button onclick="clearResults()">Clear Results</button>
+        </div>
+
+        <div id="results" class="display-none">
+            <div class="test-section">
+                <h3>Generated Comments</h3>
+                
+                <h4>Male Teacher Style:</h4>
+                <div id="comment1" class="comment-output"></div>
+                <div id="wordCount1" class="word-count"></div>
+                
+                <h4>Female Teacher Style:</h4>
+                <div id="comment2" class="comment-output"></div>
+                <div id="wordCount2" class="word-count"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="optimized-comment-generator.js"></script>
+    <script>
+        function testCommentGeneration() {
+            // Set up test data
+            const testStudentData = {
+                studentName: "Emma Johnson",
+                gender: "she",
+                overallAttributes: "8",
+                strengths: "reading, creative thinking, problem solving",
+                weaknesses: "mathematics, following instructions"
+            };
+            
+            const testSelectedTopics = [
+                "matching letters to pictures",
+                "counting from 1 to 10", 
+                "exploring the five senses"
+            ];
+            
+            const testSelectedSubjects = [
+                "English",
+                "Mathematics", 
+                "Science"
+            ];
+
+            // Store test data in localStorage
+            localStorage.setItem('studentData', JSON.stringify(testStudentData));
+            localStorage.setItem('selectedSubjects', JSON.stringify(testSelectedTopics));
+            localStorage.setItem('selectedSubjectTitles', JSON.stringify(testSelectedSubjects));
+
+            // Generate comments using the optimized generator
+            try {
+                const generator = new OptimizedCommentGenerator();
+                const comments = generator.generateCommentVariations(
+                    testStudentData,
+                    testSelectedTopics,
+                    testSelectedSubjects,
+                    2
+                );
+
+                // Display results
+                document.getElementById('comment1').textContent = comments[0];
+                document.getElementById('comment2').textContent = comments[1];
+                
+                // Show word counts with validation
+                const wordCount1 = comments[0].split(' ').length;
+                const wordCount2 = comments[1].split(' ').length;
+                
+                document.getElementById('wordCount1').textContent = `Word count: ${wordCount1} words ${wordCount1 >= 80 ? '✓' : '⚠️ (below 80)'}`;
+                document.getElementById('wordCount2').textContent = `Word count: ${wordCount2} words ${wordCount2 >= 80 ? '✓' : '⚠️ (below 80)'}`;
+                
+                // Show results section
+                document.getElementById('results').style.display = 'block';
+                
+                console.log('Comments generated successfully!');
+                console.log('Comment 1:', comments[0]);
+                console.log('Comment 2:', comments[1]);
+                
+            } catch (error) {
+                console.error('Error generating comments:', error);
+                alert('Error generating comments: ' + error.message);
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').style.display = 'none';
+            localStorage.clear();
+        }
+
+        // Test the specific sentence mentioned in the request
+        function testSpecificSentence() {
+            const originalSentence = "The student shows excellent potential for continued learning success and demonstrates strong foundational skills for future academic growth";
+            
+            console.log('Original sentence (updated):');
+            console.log(originalSentence);
+            
+            // Test with student name replacement
+            const studentName = "Emma Johnson";
+            const personalizedSentence = originalSentence.replace("The student", studentName).replace("further", "her further");
+            
+            console.log('Personalized sentence:');
+            console.log(personalizedSentence);
+        }
+
+        // Run the specific sentence test
+        testSpecificSentence();
+    </script>
+</body>
+</html>

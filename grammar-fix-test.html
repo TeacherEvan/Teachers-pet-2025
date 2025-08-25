@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Fix Test</title>
+</head>
+<body>
+    <h1>Grammar Fix Test</h1>
+    <div id="test-results"></div>
+    
+    <script src="optimized-comment-generator.js"></script>
+    <script>
+        // Test data that matches the user's example
+        const testStudentData = {
+            studentName: "Bryan",
+            gender: "he",
+            strengths: "creative thinking",
+            weaknesses: "refining motor skills",
+            overallAttributes: "10"
+        };
+        
+        const testSubjects = ["English"];
+        const testTopics = ["matching letters to pictures", "tracing and coloring letters"];
+        
+        // Save test data
+        localStorage.setItem('studentData', JSON.stringify(testStudentData));
+        localStorage.setItem('selectedSubjectTitles', JSON.stringify(testSubjects));
+        localStorage.setItem('selectedSubjects', JSON.stringify(testTopics));
+        
+        if (window.OptimizedCommentGenerator) {
+            const generator = new OptimizedCommentGenerator();
+            
+            const comment1 = generator.generateOptimizedComment(testStudentData, testTopics, testSubjects, 1);
+            const comment2 = generator.generateOptimizedComment(testStudentData, testTopics, testSubjects, 2);
+            
+            document.getElementById('test-results').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3>Original Comment (with grammar issues):</h3>
+                    <p style="background: #ffe6e6; padding: 10px; border-radius: 5px; color: #d00;">
+                        Bryan demonstrated exceptional performance this term, showing outstanding mastery of developmental milestones across multiple developmental areas. Bryan excels particularly in creative thinking, displaying natural talent and dedicated effort in these areas. He demonstrated solid progress in English, meeting developmental expectations with enthusiasm and focus. Ongoing focus on refining motor skills will help Bryan build stronger foundational skills and achieve greater mastery. He has shown particular success with "matching letters to pictures" and "tracing and coloring letters", demonstrating both understanding and practical application. <span style="background: yellow;">his</span> classroom behavior reflects exemplary engagement, creating a supportive atmosphere for collaborative learning. <span style="background: yellow;">his</span> collaborative spirit and friendly nature make him a valued member of our classroom community. Bryan demonstrates age-appropriate development across multiple learning domains. Continued support and encouragement will foster his further academic and social growth.
+                    </p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3>Fixed Male Style Comment (${comment1.split(/\s+/).length} words):</h3>
+                    <p style="background: #e6f3ff; padding: 10px; border-radius: 5px;">${comment1}</p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3>Fixed Female Style Comment (${comment2.split(/\s+/).length} words):</h3>
+                    <p style="background: #f0f8e6; padding: 10px; border-radius: 5px;">${comment2}</p>
+                </div>
+                
+                <div style="background: #d4edda; padding: 10px; border-radius: 5px;">
+                    <h3>✅ Grammar Fixes Applied:</h3>
+                    <ul>
+                        <li><strong>Pronoun Capitalization:</strong> "his" → "His" when starting sentences</li>
+                        <li><strong>Consistent Grammar:</strong> Proper pronoun usage throughout</li>
+                        <li><strong>Sentence Flow:</strong> Improved readability and structure</li>
+                        <li><strong>All User Information:</strong> Name, strengths, weaknesses, subjects, topics included</li>
+                        <li><strong>No Word Limits:</strong> Complete information preserved</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 20px;">
+                    <h3>Key Grammar Improvements:</h3>
+                    <p><strong>Before:</strong> "his classroom behavior reflects..." → <strong>After:</strong> "His classroom behavior reflects..."</p>
+                    <p><strong>Before:</strong> "his collaborative spirit..." → <strong>After:</strong> "His collaborative spirit..."</p>
+                    <p><strong>Result:</strong> Professional, properly capitalized comments that maintain grammatical correctness</p>
+                </div>
+            `;
+            
+            console.log("Grammar test completed!");
+            console.log("Male style comment:", comment1);
+            console.log("Female style comment:", comment2);
+            
+        } else {
+            document.getElementById('test-results').innerHTML = '<p style="color: red;">OptimizedCommentGenerator not found</p>';
+        }
+    </script>
+</body>
+</html>

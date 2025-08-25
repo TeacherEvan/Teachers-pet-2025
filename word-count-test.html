@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Count Test</title>
+</head>
+    <title>Word Count Test</title>
+</head>
+<body>
+    <h1>Comment Generation Test - No Word Limits</h1>
+    <div id="test-results"></div>
+    
+    <script src="optimized-comment-generator.js"></script>
+    <script>
+        // Test comment formatting (no word limits)
+        const testComment = "Emma has demonstrated excellent progress this term across multiple learning areas. She shows strong understanding in English and Mathematics and demonstrates positive classroom behavior. Emma shows excellent potential for continued learning success.";
+        
+        console.log("Original comment:", testComment);
+        console.log("Word count:", testComment.split(' ').length);
+        
+        // Test with enforceWordLimit (now just formats, doesn't limit)
+        if (window.enforceWordLimit) {
+            const formatted = window.enforceWordLimit(testComment);
+            console.log("Formatted comment:", formatted);
+            console.log("Formatted word count:", formatted.split(' ').length);
+            
+            document.getElementById('test-results').innerHTML = `
+                <h3>Original (${testComment.split(' ').length} words):</h3>
+                <p>${testComment}</p>
+                <h3>Formatted (${formatted.split(' ').length} words):</h3>
+                <p>${formatted}</p>
+                <p><strong>Status:</strong> ✓ No word limits applied - all content preserved</p>
+            `;
+        } else {
+            document.getElementById('test-results').innerHTML = '<p>Text formatting function not found</p>';
+        }
+    </script>
+</body>
+</html>

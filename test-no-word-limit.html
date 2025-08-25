@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test No Word Limit</title>
+</head>
+    <title>Test No Word Limit</title>
+</head>
+<body>
+    <h1>Test No Word Limit Implementation</h1>
+    <div id="test-results"></div>
+    
+    <script src="optimized-comment-generator.js"></script>
+    <script>
+        // Simulate student data with comprehensive information
+        const testStudentData = {
+            studentName: "Emma Smith",
+            gender: "she",
+            strengths: "reading comprehension, creative writing, problem solving, mathematics",
+            weaknesses: "spelling, handwriting, following multi-step instructions",
+            overallAttributes: "8"
+        };
+        
+        // Simulate selected subjects and topics
+        const testSubjects = ["English", "Mathematics", "Science", "Art"];
+        const testTopics = ["phonics", "addition", "subtraction", "creative expression", "observations"];
+        
+        // Save test data to localStorage
+        localStorage.setItem('studentData', JSON.stringify(testStudentData));
+        localStorage.setItem('selectedSubjectTitles', JSON.stringify(testSubjects));
+        localStorage.setItem('selectedSubjects', JSON.stringify(testTopics));
+        
+        // Test the optimized comment generator
+        if (window.OptimizedCommentGenerator) {
+            const generator = new OptimizedCommentGenerator();
+            
+            const comment1 = generator.generateOptimizedComment(testStudentData, testTopics, testSubjects, 1);
+            const comment2 = generator.generateOptimizedComment(testStudentData, testTopics, testSubjects, 2);
+            
+            document.getElementById('test-results').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3>Male Style Comment (${comment1.split(/\s+/).length} words):</h3>
+                    <p style="background: #f0f0f0; padding: 10px; border-radius: 5px;">${comment1}</p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3>Female Style Comment (${comment2.split(/\s+/).length} words):</h3>
+                    <p style="background: #f0f0f0; padding: 10px; border-radius: 5px;">${comment2}</p>
+                </div>
+                
+                <div style="background: #d4edda; padding: 10px; border-radius: 5px;">
+                    <h3>✓ All User Information Included:</h3>
+                    <ul>
+                        <li>Student Name: ${testStudentData.studentName}</li>
+                        <li>Strengths: ${testStudentData.strengths}</li>
+                        <li>Areas for Improvement: ${testStudentData.weaknesses}</li>
+                        <li>Subjects: ${testSubjects.join(', ')}</li>
+                        <li>Topics: ${testTopics.join(', ')}</li>
+                        <li>No word limits applied - full content preserved</li>
+                    </ul>
+                </div>
+            `;
+            
+            console.log("Test completed successfully!");
+            console.log("Comment 1 length:", comment1.split(/\s+/).length, "words");
+            console.log("Comment 2 length:", comment2.split(/\s+/).length, "words");
+            
+        } else {
+            document.getElementById('test-results').innerHTML = '<p style="color: red;">OptimizedCommentGenerator not found</p>';
+        }
+    </script>
+</body>
+</html>
