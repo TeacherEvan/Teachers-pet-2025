@@ -116,19 +116,25 @@ class OptimizedCommentGenerator {
     this.sentenceTemplates = {
       male: {
         openings: [
-          "{name} demonstrated {level} performance this term, showing {achievement} across multiple developmental areas.",
-          "{name} has made {level} progress throughout this academic period, displaying consistent growth and engagement.",
-          "Throughout this term, {name} maintained {level} academic standards while developing essential foundational skills.",
+          "{name} demonstrated {level} performance this term, achieving {achievement} across multiple developmental areas with consistent focus and determination.",
+          "{name} has maintained {level} academic standards throughout this period, displaying structured progress and methodical engagement with learning objectives.",
+          "Throughout this term, {name} established {level} foundational competencies while systematically developing essential educational skills and knowledge.",
+          "{name} achieved {level} performance benchmarks this term, demonstrating measurable progress across core developmental milestones.",
+          "Academic assessment reveals that {name} has attained {level} proficiency levels, meeting established standards through dedicated effort and application.",
         ],
         strengths: [
-          "{pronoun_subject} consistently demonstrates strong capabilities in {strengths}, showing remarkable aptitude and understanding.",
-          "Notable strengths include {pronoun_possessive} exceptional abilities in {strengths}, which continue to develop impressively.",
-          "{name} excels particularly in {strengths}, displaying natural talent and dedicated effort in these areas.",
+          "{name} consistently demonstrates exceptional capabilities in {strengths}, achieving measurable proficiency and maintaining high performance standards.",
+          "Notable academic strengths include {pronoun_possessive} demonstrated abilities in {strengths}, which reflect sustained achievement and skill mastery.",
+          "{name} excels particularly in {strengths}, displaying quantifiable progress and maintaining consistent performance excellence in these areas.",
+          "Assessment data confirms {pronoun_possessive} strong competencies in {strengths}, evidencing systematic skill development and achievement of learning targets.",
+          "{pronoun_subject} has established clear proficiency in {strengths}, demonstrating both technical understanding and practical application of these skills.",
         ],
         subjects: [
-          "In {subjects}, {name} shows consistent growth and understanding, engaging actively with learning materials and concepts.",
-          "{pronoun_subject} demonstrated solid progress in {subjects}, meeting developmental expectations with enthusiasm and focus.",
-          "Performance in {subjects} reflects {pronoun_possessive} commitment to learning and willingness to embrace new challenges.",
+          "In {subjects}, {name} demonstrates consistent academic progress, meeting curriculum standards and achieving measurable learning outcomes.",
+          "{name} has shown structured advancement in {subjects}, maintaining focus on learning objectives and demonstrating competency development.",
+          "Performance data in {subjects} reflects {pronoun_possessive} systematic approach to learning and achievement of established academic benchmarks.",
+          "{pronoun_subject} demonstrated solid competency growth in {subjects}, meeting grade-level expectations through focused effort and application.",
+          "Academic progress in {subjects} indicates {name}'s ability to master essential concepts and achieve required performance standards.",
         ],
         weaknesses: [
           "With continued practice in {weaknesses}, {name} will further strengthen {pronoun_possessive} skills and build greater confidence.",
@@ -159,14 +165,18 @@ class OptimizedCommentGenerator {
       },
       female: {
         openings: [
-          "{name} has flourished beautifully this term, displaying remarkable growth and development across all learning areas.",
-          "It has been an absolute joy to watch {name} grow and make wonderful progress throughout this academic period.",
-          "{name} has blossomed into a confident and enthusiastic learner, embracing each new challenge with determination.",
+          "{name} has flourished magnificently this term, blossoming into a confident learner and bringing such joy to our classroom community.",
+          "It has been an absolute delight watching {name} grow and blossom, celebrating wonderful progress throughout this beautiful learning journey.",
+          "{name} has bloomed into an enthusiastic learner, embracing each precious learning moment with such wonderful curiosity and grace.",
+          "What a joy it has been to witness {name}'s beautiful growth this term, flourishing in so many wonderful ways across all learning areas.",
+          "{name} has truly blossomed this term, radiating enthusiasm and bringing such warmth and joy to every learning experience.",
         ],
         strengths: [
-          "{pronoun_possessive} wonderful talent for {strengths} truly shines in our classroom, bringing light and energy to learning.",
-          "We are especially impressed with {pronoun_possessive} natural abilities in {strengths}, which continue to develop beautifully.",
-          "{name} brings such joy to learning through {pronoun_possessive} exceptional strengths in {strengths}, inspiring others around {pronoun_object}.",
+          "{name}'s beautiful gifts in {strengths} truly illuminate our classroom, bringing such wonderful energy and inspiration to everyone around {pronoun_object}.",
+          "We celebrate {pronoun_possessive} magnificent talents in {strengths}, which continue to blossom and flourish in the most wonderful ways.",
+          "{name} brings such radiant joy to learning through {pronoun_possessive} exceptional abilities in {strengths}, inspiring and uplifting our entire classroom family.",
+          "The wonderful way {name} shines in {strengths} fills our hearts with joy and creates such beautiful learning moments for everyone.",
+          "{pronoun_possessive_cap} natural gifts in {strengths} bloom beautifully each day, bringing light and wonder to our learning community.",
         ],
         subjects: [
           "{pronoun_subject} has shown wonderful progress in {subjects} with genuine enthusiasm and a love for discovery.",
@@ -248,6 +258,9 @@ class OptimizedCommentGenerator {
       return data[key] || match;
     });
     
+    // Apply name personalization
+    result = this.ensureNameUsage(result, data.name);
+    
     // Post-processing for grammar improvements
     result = this.improveGrammar(result);
     
@@ -255,7 +268,7 @@ class OptimizedCommentGenerator {
   }
 
   /**
-   * Improve grammar and capitalization in generated text
+   * Comprehensive grammar improvement with enhanced rules
    */
   improveGrammar(text) {
     // Fix common capitalization issues after sentence endings
@@ -268,10 +281,167 @@ class OptimizedCommentGenerator {
       return letter.toUpperCase();
     });
     
-    // Fix specific pronoun issues that may occur
-    text = text.replace(/\.\s+his\s+/g, '. His ');
-    text = text.replace(/\.\s+her\s+/g, '. Her ');
-    text = text.replace(/\.\s+their\s+/g, '. Their ');
+    // Enhanced pronoun capitalization (comprehensive patterns)
+    text = text.replace(/\b(\.|!|\?)\s+(he|she|his|her|him|their|they|them)\b/g, (match, punct, pronoun) => {
+      return punct + ' ' + pronoun.charAt(0).toUpperCase() + pronoun.slice(1);
+    });
+    
+    // Fix possessive pronoun capitalization after punctuation
+    text = text.replace(/([.!?]\s+)(his|her|their)\s+([a-z])/g, (match, punct, possessive, nextWord) => {
+      return punct + possessive.charAt(0).toUpperCase() + possessive.slice(1) + ' ' + nextWord;
+    });
+    
+    // Ensure proper spacing after punctuation
+    text = text.replace(/([.!?])([A-Z])/g, '$1 $2');
+    
+    // Fix double spaces
+    text = text.replace(/\s+/g, ' ');
+    
+    // Ensure proper ending punctuation
+    if (!/[.!?]$/.test(text.trim())) {
+      text = text.trim().replace(/[,;:]$/, '') + '.';
+    }
+    
+    return text.trim();
+  }
+
+  /**
+   * Validate input data completeness and quality
+   */
+  validateInputData(studentData, selectedTopics, selectedSubjects) {
+    const validation = {
+      isValid: true,
+      warnings: [],
+      errors: []
+    };
+
+    // Check student name
+    if (!studentData.studentName || studentData.studentName.trim() === "" || studentData.studentName === "The student") {
+      validation.warnings.push("Student name is missing or generic - will use fallback");
+    }
+
+    // Check data completeness
+    if (!studentData.strengths || studentData.strengths.trim() === "") {
+      validation.warnings.push("No strengths provided - will use defaults");
+    }
+
+    if (!studentData.weaknesses || studentData.weaknesses.trim() === "") {
+      validation.warnings.push("No growth areas provided - will use defaults");
+    }
+
+    if (!selectedTopics || selectedTopics.length === 0) {
+      validation.warnings.push("No specific topics selected - will use general topics");
+    }
+
+    if (!selectedSubjects || selectedSubjects.length === 0) {
+      validation.warnings.push("No subjects selected - will use general subjects");
+    }
+
+    return validation;
+  }
+
+  /**
+   * Validate generated comment quality
+   */
+  validateGeneratedComment(comment, studentData) {
+    const validation = {
+      isValid: true,
+      issues: [],
+      score: 0
+    };
+
+    let score = 0;
+
+    // Grammar checks
+    if (!/[.!?]$/.test(comment.trim())) {
+      validation.issues.push("Missing proper ending punctuation");
+    } else {
+      score += 10;
+    }
+
+    if (/[.!?]\s+[a-z]/.test(comment)) {
+      validation.issues.push("Capitalization error after punctuation");
+    } else {
+      score += 10;
+    }
+
+    if (/\s{2,}/.test(comment)) {
+      validation.issues.push("Multiple consecutive spaces found");
+    } else {
+      score += 10;
+    }
+
+    // Name usage checks
+    if (comment.includes('The student') || comment.includes('the student')) {
+      validation.issues.push("Generic 'The student' reference found");
+    } else {
+      score += 15;
+    }
+
+    const nameCount = (comment.match(new RegExp(studentData.studentName, 'gi')) || []).length;
+    if (nameCount >= 3) {
+      score += 15;
+    } else if (nameCount >= 1) {
+      score += 5;
+    } else {
+      validation.issues.push("Student name not used enough");
+    }
+
+    // Data integration checks
+    if (studentData.strengths) {
+      const strengthsArray = studentData.strengths.split(',').map(s => s.trim().toLowerCase());
+      const hasStrengths = strengthsArray.some(strength => 
+        comment.toLowerCase().includes(strength.slice(0, 6))
+      );
+      if (hasStrengths) {
+        score += 10;
+      } else {
+        validation.issues.push("Student strengths not clearly referenced");
+      }
+    }
+
+    if (studentData.weaknesses) {
+      const weaknessesArray = studentData.weaknesses.split(',').map(s => s.trim().toLowerCase());
+      const hasWeaknesses = weaknessesArray.some(weakness => 
+        comment.toLowerCase().includes(weakness.slice(0, 6))
+      );
+      if (hasWeaknesses) {
+        score += 10;
+      } else {
+        validation.issues.push("Growth areas not clearly referenced");
+      }
+    }
+
+    // Word count check
+    const wordCount = comment.split(/\s+/).length;
+    if (wordCount >= 80) {
+      score += 20;
+    } else if (wordCount >= 60) {
+      score += 10;
+    } else {
+      validation.issues.push(`Comment too short: ${wordCount} words (minimum 80 recommended)`);
+    }
+
+    validation.score = score;
+    validation.isValid = validation.issues.length === 0;
+
+    return validation;
+  }
+
+  /**
+   * Ensure student name usage instead of generic references
+   */
+  ensureNameUsage(text, studentName) {
+    if (!studentName || studentName === 'The student') return text;
+    
+    // Replace "The student" with student name
+    text = text.replace(/\bThe student\b/g, studentName);
+    text = text.replace(/\bthe student\b/g, studentName);
+    
+    // Replace generic "student" with name when appropriate
+    text = text.replace(/\b([Aa])\s+student\b/g, (match, article) => {
+      return studentName;
+    });
     
     return text;
   }
@@ -338,7 +508,7 @@ class OptimizedCommentGenerator {
   }
 
   /**
-   * Enhanced comment generation with improved data integration
+   * Enhanced comment generation with mandatory data integration and validation
    */
   generateOptimizedComment(
     studentData,
@@ -346,8 +516,15 @@ class OptimizedCommentGenerator {
     selectedSubjects,
     variant = 1
   ) {
-    // Data validation and defaults
-    const name = studentData.studentName || "The student";
+    // Pre-generation validation
+    const inputValidation = this.validateInputData(studentData, selectedTopics, selectedSubjects);
+    if (inputValidation.warnings.length > 0) {
+      console.warn('Input validation warnings:', inputValidation.warnings);
+    }
+    // Data validation and defaults - ensure name is never "The student"
+    const name = studentData.studentName && studentData.studentName.trim() && studentData.studentName !== "The student" 
+      ? studentData.studentName.trim() 
+      : "This student";
     const gender = studentData.gender || "they";
     const overall = Math.max(
       1,
@@ -359,11 +536,11 @@ class OptimizedCommentGenerator {
     const pronouns =
       this.grammarRules.pronouns[gender] || this.grammarRules.pronouns.they;
 
-    // Process input arrays
-    const strengthsList = this.processTextArray(studentData.strengths, 3);
-    const weaknessList = this.processTextArray(studentData.weaknesses, 2);
-    const subjectsList = this.capitalizeSubjects(selectedSubjects || []);
-    const topicsList = (selectedTopics || []).slice(0, 4); // Increased to show more specific topics
+    // MANDATORY: Process ALL input arrays - never empty
+    const strengthsList = this.processTextArray(studentData.strengths, 4) || ["classroom engagement", "positive attitude"];
+    const weaknessList = this.processTextArray(studentData.weaknesses, 3) || ["continued skill development"];
+    const subjectsList = this.capitalizeSubjects(selectedSubjects || ["general learning"]);
+    const topicsList = (selectedTopics || ["foundational skills"]).slice(0, 5); // Show more topics
 
     // Select template style (male/female teacher perspective)
     const isFemaleStyle = variant === 2;
@@ -390,87 +567,76 @@ class OptimizedCommentGenerator {
       pronoun_reflexive: pronouns.reflexive,
     };
 
-    // Generate opening sentence
+    // MANDATORY: Generate opening sentence
     const opening = this.selectTemplate(templates.openings, usedTemplates);
     sentences.push(this.replacePlaceholders(opening, replacementData));
 
-    // Add strengths if available
-    if (strengthsList.length > 0) {
-      const strengthsText = this.naturalJoin(strengthsList.slice(0, 3));
-      const strengthTemplate = this.selectTemplate(
-        templates.strengths,
-        usedTemplates
-      );
-      sentences.push(
-        this.replacePlaceholders(strengthTemplate, {
-          ...replacementData,
-          strengths: strengthsText,
-        })
-      );
-    }
+    // MANDATORY: Add strengths (always included)
+    const strengthsText = this.naturalJoin(strengthsList.slice(0, 3));
+    const strengthTemplate = this.selectTemplate(
+      templates.strengths,
+      usedTemplates
+    );
+    sentences.push(
+      this.replacePlaceholders(strengthTemplate, {
+        ...replacementData,
+        strengths: strengthsText,
+      })
+    );
 
-    // CRITICAL FIX: Prioritize specific topics over general subjects
-    // Add specific topics first - this is what the user actually selected!
-    if (topicsList.length > 0) {
-      const topicsText = this.naturalJoin(
-        topicsList.slice(0, 3).map((t) => t.toLowerCase())
-      );
-      const topicTemplate = this.selectTemplate(
-        templates.topics,
-        usedTemplates
-      );
-      sentences.push(
-        this.replacePlaceholders(topicTemplate, {
-          ...replacementData,
-          topics: topicsText,
-        })
-      );
-    }
+    // MANDATORY: Add specific topics first (user's actual selections)
+    const topicsText = this.naturalJoin(
+      topicsList.slice(0, 4).map((t) => typeof t === 'string' ? t.toLowerCase() : String(t).toLowerCase())
+    );
+    const topicTemplate = this.selectTemplate(
+      templates.topics,
+      usedTemplates
+    );
+    sentences.push(
+      this.replacePlaceholders(topicTemplate, {
+        ...replacementData,
+        topics: topicsText,
+      })
+    );
 
-    // Add subjects as secondary information (only if no specific topics)
-    if (subjectsList.length > 0 && topicsList.length === 0) {
-      const subjectsText = this.naturalJoin(subjectsList.slice(0, 3));
-      const subjectTemplate = this.selectTemplate(
-        templates.subjects,
-        usedTemplates
-      );
-      sentences.push(
-        this.replacePlaceholders(subjectTemplate, {
-          ...replacementData,
-          subjects: subjectsText,
-        })
-      );
-    }
+    // MANDATORY: Add subjects (always included)
+    const subjectsText = this.naturalJoin(subjectsList.slice(0, 3));
+    const subjectTemplate = this.selectTemplate(
+      templates.subjects,
+      usedTemplates
+    );
+    sentences.push(
+      this.replacePlaceholders(subjectTemplate, {
+        ...replacementData,
+        subjects: subjectsText,
+      })
+    );
 
-    // Add weaknesses/areas for improvement if available
-    if (weaknessList.length > 0) {
-      const weaknessesText = this.naturalJoin(weaknessList.slice(0, 2));
-      const weaknessTemplate = this.selectTemplate(
-        templates.weaknesses,
-        usedTemplates
-      );
-      sentences.push(
-        this.replacePlaceholders(weaknessTemplate, {
-          ...replacementData,
-          weaknesses: weaknessesText,
-        })
-      );
-    }
+    // MANDATORY: Add growth areas (always included)
+    const weaknessesText = this.naturalJoin(weaknessList.slice(0, 2));
+    const weaknessTemplate = this.selectTemplate(
+      templates.weaknesses,
+      usedTemplates
+    );
+    sentences.push(
+      this.replacePlaceholders(weaknessTemplate, {
+        ...replacementData,
+        weaknesses: weaknessesText,
+      })
+    );
 
-    // Add behavior/attitude
+    // MANDATORY: Add behavior/attitude
     const behaviorTemplate = this.selectTemplate(
       templates.behavior,
       usedTemplates
     );
     sentences.push(this.replacePlaceholders(behaviorTemplate, replacementData));
 
-    // Add social skills if available
-    if (templates.social) {
-      const socialTemplate = this.selectTemplate(templates.social, usedTemplates);
-      sentences.push(this.replacePlaceholders(socialTemplate, replacementData));
-    }
+    // MANDATORY: Add social skills
+    const socialTemplate = this.selectTemplate(templates.social, usedTemplates);
+    sentences.push(this.replacePlaceholders(socialTemplate, replacementData));
 
-    // Add conclusion
+    // MANDATORY: Add conclusion
     const conclusionTemplate = this.selectTemplate(
       templates.conclusions,
       usedTemplates
@@ -481,7 +647,19 @@ class OptimizedCommentGenerator {
 
     // Combine and format
     const fullComment = sentences.join(" ");
-    return this.optimizeWordCount(fullComment);
+    const optimizedComment = this.optimizeWordCount(fullComment);
+    
+    // Final name personalization pass
+    const finalComment = this.ensureNameUsage(optimizedComment, name);
+    
+    // Post-generation validation
+    const outputValidation = this.validateGeneratedComment(finalComment, studentData);
+    if (outputValidation.issues.length > 0) {
+      console.warn('Generated comment issues:', outputValidation.issues);
+      console.log('Comment quality score:', outputValidation.score + '/100');
+    }
+    
+    return finalComment;
   }
 
   /**

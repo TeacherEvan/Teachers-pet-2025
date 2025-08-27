@@ -265,7 +265,7 @@ function generateBasicComments() {
         mainSubjects
     });
     
-    const name = studentData.studentName || 'The student';
+    const name = studentData.studentName && studentData.studentName.trim() ? studentData.studentName.trim() : "This student";
     const gender = studentData.gender || 'they';
     const pronoun = gender === 'he' ? 'He' : gender === 'she' ? 'She' : 'They';
     const possessive = gender === 'he' ? 'his' : gender === 'she' ? 'her' : 'their';

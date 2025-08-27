@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Comment Validation Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comment-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .male-style {
+            border-left: 4px solid #007bff;
+        }
+        
+        .female-style {
+            border-left: 4px solid #e91e63;
+        }
+        
+        .validation-results {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .error-results {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .validation-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .validation-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .pass {
+            color: #28a745;
+        }
+        
+        .fail {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Enhanced Comment System Validation Test</h1>
+        <p>This test validates grammar improvements, personality differentiation, comprehensive data integration, and name personalization.</p>
+        
+        <div>
+            <button onclick="runComprehensiveTest()">Run Comprehensive Test</button>
+            <button onclick="testSpecificStudent()">Test with Specific Student</button>
+            <button onclick="clearResults()">Clear Results</button>
+        </div>
+    </div>
+
+    <div id="results" style="display: none;">
+        <div class="test-container">
+            <h2>Test Results</h2>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Male Style</h3>
+                    <div id="maleWordCount">-</div>
+                    <small>Words</small>
+                </div>
+                <div class="stat-box">
+                    <h3>Female Style</h3>
+                    <div id="femaleWordCount">-</div>
+                    <small>Words</small>
+                </div>
+                <div class="stat-box">
+                    <h3>Name Usage</h3>
+                    <div id="nameUsageCount">-</div>
+                    <small>References</small>
+                </div>
+                <div class="stat-box">
+                    <h3>Data Integration</h3>
+                    <div id="dataIntegrationScore">-</div>
+                    <small>Score</small>
+                </div>
+            </div>
+            
+            <h3>Generated Comments</h3>
+            
+            <h4>Male Teacher Style:</h4>
+            <div id="maleComment" class="comment-output male-style"></div>
+            
+            <h4>Female Teacher Style:</h4>
+            <div id="femaleComment" class="comment-output female-style"></div>
+            
+            <h3>Validation Results</h3>
+            <div id="validationResults"></div>
+        </div>
+    </div>
+
+    <script src="optimized-comment-generator.js"></script>
+    <script>
+        function runComprehensiveTest() {
+            const testStudentData = {
+                studentName: "Alexander Thompson",
+                gender: "he",
+                overallAttributes: "8",
+                strengths: "creative thinking, mathematical reasoning, collaborative learning, artistic expression",
+                weaknesses: "following multi-step instructions, organization skills, time management"
+            };
+            
+            const testSelectedTopics = [
+                "recognizing letters A-M",
+                "counting from 1 to 20",
+                "exploring plant life cycles",
+                "practicing sharing skills",
+                "identifying geometric shapes"
+            ];
+            
+            const testSelectedSubjects = [
+                "English",
+                "Mathematics",
+                "Science",
+                "Social Studies"
+            ];
+
+            runTest(testStudentData, testSelectedTopics, testSelectedSubjects);
+        }
+
+        function testSpecificStudent() {
+            const testStudentData = {
+                studentName: "Isabella Rodriguez",
+                gender: "she",
+                overallAttributes: "9",
+                strengths: "reading comprehension, empathy, leadership, problem solving",
+                weaknesses: "handwriting, attention to detail"
+            };
+            
+            const testSelectedTopics = [
+                "sight word recognition",
+                "addition and subtraction",
+                "weather patterns",
+                "community helpers"
+            ];
+            
+            const testSelectedSubjects = [
+                "English",
+                "Mathematics",
+                "Science"
+            ];
+
+            runTest(testStudentData, testSelectedTopics, testSelectedSubjects);
+        }
+
+        function runTest(studentData, selectedTopics, selectedSubjects) {
+            try {
+                // Store test data
+                localStorage.setItem('studentData', JSON.stringify(studentData));
+                localStorage.setItem('selectedSubjects', JSON.stringify(selectedTopics));
+                localStorage.setItem('selectedSubjectTitles', JSON.stringify(selectedSubjects));
+
+                // Generate comments
+                const generator = new OptimizedCommentGenerator();
+                const maleComment = generator.generateOptimizedComment(studentData, selectedTopics, selectedSubjects, 1);
+                const femaleComment = generator.generateOptimizedComment(studentData, selectedTopics, selectedSubjects, 2);
+
+                // Display comments
+                document.getElementById('maleComment').textContent = maleComment;
+                document.getElementById('femaleComment').textContent = femaleComment;
+
+                // Calculate statistics
+                const maleWordCount = maleComment.split(/\s+/).length;
+                const femaleWordCount = femaleComment.split(/\s+/).length;
+                
+                document.getElementById('maleWordCount').textContent = maleWordCount;
+                document.getElementById('femaleWordCount').textContent = femaleWordCount;
+
+                // Validate results
+                const validationResults = validateComments(maleComment, femaleComment, studentData, selectedTopics, selectedSubjects);
+                displayValidationResults(validationResults);
+
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                
+                console.log('Enhanced validation test completed successfully');
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+                alert('Test failed: ' + error.message);
+            }
+        }
+
+        function validateComments(maleComment, femaleComment, studentData, selectedTopics, selectedSubjects) {
+            const results = [];
+            
+            // Grammar validation
+            results.push({
+                test: "Proper capitalization after punctuation",
+                male: !/[.!?]\s+[a-z]/.test(maleComment),
+                female: !/[.!?]\s+[a-z]/.test(femaleComment)
+            });
+            
+            results.push({
+                test: "No double spaces",
+                male: !/\s{2,}/.test(maleComment),
+                female: !/\s{2,}/.test(femaleComment)
+            });
+            
+            results.push({
+                test: "Proper ending punctuation",
+                male: /[.!?]$/.test(maleComment.trim()),
+                female: /[.!?]$/.test(femaleComment.trim())
+            });
+
+            // Name personalization validation
+            const nameCount = (maleComment.match(new RegExp(studentData.studentName, 'gi')) || []).length;
+            const femaleNameCount = (femaleComment.match(new RegExp(studentData.studentName, 'gi')) || []).length;
+            
+            results.push({
+                test: "Student name used (not 'The student')",
+                male: !maleComment.includes('The student') && !maleComment.includes('the student'),
+                female: !femaleComment.includes('The student') && !femaleComment.includes('the student')
+            });
+            
+            results.push({
+                test: "Multiple name references",
+                male: nameCount >= 3,
+                female: femaleNameCount >= 3
+            });
+
+            // Personality differentiation
+            const maleKeywords = ['demonstrated', 'achieved', 'maintained', 'standards', 'competency', 'benchmarks'];
+            const femaleKeywords = ['flourished', 'blossomed', 'wonderful', 'joy', 'beautiful', 'celebrated'];
+            
+            const maleHasKeywords = maleKeywords.some(keyword => maleComment.toLowerCase().includes(keyword));
+            const femaleHasKeywords = femaleKeywords.some(keyword => femaleComment.toLowerCase().includes(keyword));
+            
+            results.push({
+                test: "Male style uses professional language",
+                male: maleHasKeywords,
+                female: true // N/A for female
+            });
+            
+            results.push({
+                test: "Female style uses nurturing language",
+                male: true, // N/A for male
+                female: femaleHasKeywords
+            });
+
+            // Data integration validation
+            const strengthsArray = studentData.strengths.split(',').map(s => s.trim().toLowerCase());
+            const weaknessesArray = studentData.weaknesses.split(',').map(s => s.trim().toLowerCase());
+            
+            const maleHasStrengths = strengthsArray.some(strength => 
+                maleComment.toLowerCase().includes(strength.slice(0, 6)) // Check partial matches
+            );
+            const femaleHasStrengths = strengthsArray.some(strength => 
+                femaleComment.toLowerCase().includes(strength.slice(0, 6))
+            );
+            
+            results.push({
+                test: "Includes student strengths",
+                male: maleHasStrengths,
+                female: femaleHasStrengths
+            });
+            
+            const maleHasWeaknesses = weaknessesArray.some(weakness => 
+                maleComment.toLowerCase().includes(weakness.slice(0, 6))
+            );
+            const femaleHasWeaknesses = weaknessesArray.some(weakness => 
+                femaleComment.toLowerCase().includes(weakness.slice(0, 6))
+            );
+            
+            results.push({
+                test: "Includes growth areas",
+                male: maleHasWeaknesses,
+                female: femaleHasWeaknesses
+            });
+            
+            const topicsHasMatch = selectedTopics.some(topic => 
+                maleComment.toLowerCase().includes(topic.toLowerCase().slice(0, 8)) ||
+                femaleComment.toLowerCase().includes(topic.toLowerCase().slice(0, 8))
+            );
+            
+            results.push({
+                test: "Includes selected topics",
+                male: topicsHasMatch,
+                female: topicsHasMatch
+            });
+
+            // Update statistics
+            document.getElementById('nameUsageCount').textContent = nameCount + femaleNameCount;
+            const dataScore = results.filter(r => r.test.includes('Includes')).length;
+            document.getElementById('dataIntegrationScore').textContent = `${dataScore}/3`;
+
+            return results;
+        }
+
+        function displayValidationResults(results) {
+            const container = document.getElementById('validationResults');
+            let html = '<ul class="validation-list">';
+            
+            results.forEach(result => {
+                const maleStatus = result.male ? '✓' : '✗';
+                const femaleStatus = result.female ? '✓' : '✗';
+                const maleClass = result.male ? 'pass' : 'fail';
+                const femaleClass = result.female ? 'pass' : 'fail';
+                
+                html += `<li><strong>${result.test}:</strong> 
+                    Male <span class="${maleClass}">${maleStatus}</span> | 
+                    Female <span class="${femaleClass}">${femaleStatus}</span>
+                </li>`;
+            });
+            
+            html += '</ul>';
+            container.innerHTML = html;
+        }
+
+        function clearResults() {
+            document.getElementById('results').style.display = 'none';
+            localStorage.clear();
+        }
+    </script>
+</body>
+</html>
