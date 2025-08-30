@@ -525,6 +525,16 @@ class OptimizedCommentGenerator {
     const name = studentData.studentName && studentData.studentName.trim() && studentData.studentName !== "The student" 
       ? studentData.studentName.trim() 
       : "This student";
+      
+    // Warn user if student name is missing
+    if (!studentData.studentName || !studentData.studentName.trim()) {
+      console.warn('⚠️ Student name is missing! Please check the student information form.');
+      // Show alert only once per session
+      if (!window.studentNameWarningShown) {
+        alert('⚠️ Warning: Student name is missing!\n\nPlease go back to the student information page and enter the student name to get personalized comments.');
+        window.studentNameWarningShown = true;
+      }
+    }
     const gender = studentData.gender || "they";
     const overall = Math.max(
       1,
@@ -721,6 +731,11 @@ class OptimizedCommentGenerator {
           specificTopics,
           mainSubjects
         });
+        
+        // Debug student name specifically
+        console.log("Student name from localStorage:", studentData.studentName);
+        console.log("Student name type:", typeof studentData.studentName);
+        console.log("Student name length:", studentData.studentName ? studentData.studentName.length : 'undefined');
 
         // Generate optimized comments with correct parameter order
         // selectedTopics should be the specific topics, selectedSubjects should be main subjects
